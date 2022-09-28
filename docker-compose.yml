@@ -8,11 +8,11 @@ services:
     ports:
       - "81:8080"
     networks:
-      - spring-cloud-network
+      - postgres
 
-  shop:
-    image: shop-server
-    container_name: shop
+  shop-service:
+    image: shop-service
+    container_name: shop-service
     build:
       context: shop
     depends_on:
@@ -20,27 +20,27 @@ services:
     ports:
       - "80:8080"
     environment:
-      - DATABASE_URL=jdbc:postgresql://localhost:5432/postgres
+      - SERVER_URL=http://database:5432/postgres
       - DATABASE_HOST=db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=0000
       - POSTGRES_DB=postgres
     networks:
-      - spring-cloud-network
+      - postgres
 
-  db:
+  database:
     image: postgres:14.5-alpine
     container_name: database
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=0000
       - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=0000
       - PGDATA='/var/lib/postgresql/data/pgdata'
     volumes:
       - .:/docker-entrypoint-initdb.d
-      - .:/var/lib/postgresql/data
+      - ./db-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
       interval: 10s
@@ -74,7 +74,5 @@ services:
       - postgres
 
 networks:
-  spring-cloud-network:
-    driver: bridge
   postgres:
     driver: bridge

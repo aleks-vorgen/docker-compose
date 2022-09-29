@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   exchange-rate-api:
     image: exchange-rate-api
@@ -8,36 +8,51 @@ services:
     ports:
       - "81:8080"
     networks:
-      - spring-cloud-network
+      - postgres
 
-  shop:
-    image: shop-server
-    container_name: shop
+  shop-service:
+    image: shop-service
+    container_name: shop-service
     build:
       context: shop
     depends_on:
-      - db
+      - database
     ports:
       - "80:8080"
     environment:
-      - DATABASE_URL=jdbc:postgresql://localhost:5432/postgres
-      - DATABASE_HOST=db
+      - DATABASE_HOST=database
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=0000
       - POSTGRES_DB=postgres
     networks:
-      - spring-cloud-network
+      - postgres
 
-  db:
-    image: postgres
+  database:
+    image: postgres:14.5-alpine
     container_name: database
-    restart: always
+    ports:
+      - "5433:5432"
     environment:
-      - DATABASE_URL=jdbc:postgresql://localhost:5432/postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=0000
       - POSTGRES_DB=postgres
+      - PGDATA=/db-data/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./db-init-data:/docker-entrypoint-initdb.d
+      - ./db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    deploy:
+        resources:
+          limits:
+            cpus: '1'
+            memory: 4G
+    networks:
+      - postgres
 
 networks:
-  spring-cloud-network:
-    driver: bridge
+  postgres:

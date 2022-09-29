@@ -16,12 +16,11 @@ services:
     build:
       context: shop
     depends_on:
-      - db
+      - database
     ports:
       - "80:8080"
     environment:
-      - SERVER_URL=http://database:5432/postgres
-      - DATABASE_HOST=db
+      - DATABASE_HOST=database
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=0000
       - POSTGRES_DB=postgres
@@ -35,11 +34,11 @@ services:
       - "5433:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=0000
-      - PGDATA='/var/lib/postgresql/data/pgdata'
+      - POSTGRES_DB=postgres
+      - PGDATA=/db-data/var/lib/postgresql/data/pgdata
     volumes:
-      - .:/docker-entrypoint-initdb.d
+      - ./db-init-data:/docker-entrypoint-initdb.d
       - ./db-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
@@ -55,24 +54,5 @@ services:
     networks:
       - postgres
 
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4:5.7
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "sumskoj01@gmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "postgres"
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-    ports:
-      - "5050:80"
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1G
-    networks:
-      - postgres
-
 networks:
   postgres:
-    driver: bridge

@@ -32,7 +32,7 @@
             <div class="card-body">
                 <h5 class="card-title">${product.title}</h5>
                 <p class="card-text">${product.description}</p>
-                <p class="card-text text-end">${product.price}$</p>
+                <p class="card-text text-end" id="price">${product.price}$</p>
                 <a href="/products/${product.id}" class="card-link">Детали</a>
                 <a href="/orders/addToBasket/${product.id}" class="card-link">В корзину</a>
             </div>
@@ -48,6 +48,15 @@
             $(item).on("error", function () {
                 showDefaultImage(this);
             }).attr('src', $(item).attr('src'));
+        });
+
+        //TODO
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:81",
+            format: "json"
+        }).done(function (data) {
+            console.log(data);
         });
     });
 

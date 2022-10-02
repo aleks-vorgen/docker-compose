@@ -32,15 +32,13 @@
             <div class="card-body">
                 <h5 class="card-title">${product.title}</h5>
                 <p class="card-text">${product.description}</p>
-                <p class="card-text text-end" id="price">${product.price}$</p>
+                <p class="card-text text-end price">${product.price}$</p>
                 <a href="/products/${product.id}" class="card-link">Детали</a>
                 <a href="/orders/addToBasket/${product.id}" class="card-link">В корзину</a>
             </div>
         </div>
     </div>
 </c:forEach>
-
-<div class="float-start search_data" style="width: 30%; margin: 10px"></div>
 
 <script>
     $(document).ready(function () {
@@ -50,19 +48,29 @@
             }).attr('src', $(item).attr('src'));
         });
 
-        //TODO
         $.ajax({
             type: "GET",
             url: "http://localhost:81",
             format: "json"
         }).done(function (data) {
-            console.log(data);
+            fetchPriceToUAH(data);
         });
     });
 
     function showDefaultImage(img) {
         $(img).attr('src', '/images/no_img.png');
         $(img).off('error');
+    }
+
+    function fetchPriceToUAH(data) {
+        if(data.length !== 0) {
+            let priceUAH = data[0].sale;
+            $('.price').each(function (index, elem) {
+                let elemPrice = elem.innerHTML.slice(0, -1);
+                elem.innerHTML = (new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 0})
+                    .format(elemPrice * priceUAH)) + " грн";
+            });
+        }
     }
 </script>
 

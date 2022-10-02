@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="<c:url value="/css/bootstrap.css"/>" rel="stylesheet" type="text/css">
     <link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css">
-    <script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
 <body style="min-height: 100vh">
 <c:import url="navigation.jsp"/>

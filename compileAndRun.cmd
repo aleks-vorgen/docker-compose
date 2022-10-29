@@ -1,0 +1,1 @@
+cd ExchangeRateRestApi && mvn package && cd ../shop && mvn package && cd .. && docker-compose up --build

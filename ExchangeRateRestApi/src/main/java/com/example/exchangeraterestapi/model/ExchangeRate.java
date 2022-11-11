@@ -2,9 +2,13 @@ package com.example.exchangeraterestapi.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExchangeRate {
 

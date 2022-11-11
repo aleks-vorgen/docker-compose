@@ -41,3 +41,4 @@ build/
 
 /ExchangeRateRestApi/src/test/
 /ExchangeRateRestApi/target/
+/logs/

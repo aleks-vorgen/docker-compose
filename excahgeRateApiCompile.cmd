@@ -1,0 +1,1 @@
+cd ExchangeRateRestApi && mvn package
